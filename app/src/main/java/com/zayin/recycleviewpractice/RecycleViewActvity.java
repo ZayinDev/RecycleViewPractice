@@ -4,18 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Create by zayin on 2016/09/23
@@ -25,6 +24,10 @@ import butterknife.ButterKnife;
 public class RecycleViewActvity extends Activity {
     @BindView(R.id.rv_practice)
     RecyclerView rvPractice;
+    @BindView(R.id.btn_add)
+    Button btnAdd;
+    @BindView(R.id.btn_remove)
+    Button btnRemove;
     private HomeAdapter mAdapter;
     private ArrayList<String> mDatas;
 
@@ -34,13 +37,16 @@ public class RecycleViewActvity extends Activity {
         setContentView(R.layout.activity_recycleview);
         ButterKnife.bind(this);
 
-        initView();
         initData();
+        initView();
     }
 
     private void initView() {
-        rvPractice.setLayoutManager(new StaggeredGridLayoutManager(3, OrientationHelper.VERTICAL));
-        rvPractice.setAdapter(mAdapter = new HomeAdapter());
+        rvPractice.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.HORIZONTAL));
+//        rvPractice.addItemDecoration(new DividerGridItemDecoration(this));
+        rvPractice.setItemAnimator(new DefaultItemAnimator());
+        mAdapter = new HomeAdapter(this, mDatas);
+        rvPractice.setAdapter(mAdapter);
     }
 
     private void initData() {
@@ -50,37 +56,20 @@ public class RecycleViewActvity extends Activity {
         }
     }
 
-    private class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> {
 
-        @Override
-        public HomeAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            MyViewHolder myViewHolder = new MyViewHolder(LayoutInflater.from(RecycleViewActvity.this).inflate(R.layout.item_recycle, parent, false));
+    @OnClick({R.id.btn_add, R.id.btn_remove})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_add:
+                mAdapter.addData(1);
 
-            return myViewHolder;
-        }
+                break;
+            case R.id.btn_remove:
+                mAdapter.removeData(1);
 
-        @Override
-        public void onBindViewHolder(HomeAdapter.MyViewHolder holder, int position) {
-            holder.tv.setText(mDatas.get(position));
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mDatas.size();
-        }
-
-
-        class MyViewHolder extends RecyclerView.ViewHolder {
-            TextView tv;
-
-            public MyViewHolder(View itemView) {
-                super(itemView);
-                tv = (TextView) itemView.findViewById(R.id.tv_id_num);
-            }
+                break;
         }
     }
-
 
     public static void actionStart(Context context, String data1, String data2) {
         Intent intent = new Intent(context, RecycleViewActvity.class);
@@ -88,4 +77,5 @@ public class RecycleViewActvity extends Activity {
         intent.putExtra("param2", data2);
         context.startActivity(intent);
     }
+
 }
