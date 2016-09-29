@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -31,8 +32,26 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         holder.tv.setText(mDatas.get(position));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ctx,position + "  clicked",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+       /* if (mOnItemClickListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = holder.getLayoutPosition();
+                    mOnItemClickListener.onItemClick(holder.itemView,pos);
+                }
+            });
+        }*/
+
     }
 
     @Override
@@ -49,13 +68,24 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder> 
         }
     }
 
-    public void addData(int position){
-        mDatas.add(position,"ha");
+    public void addData(int position) {
+        mDatas.add(position, "ha");
         notifyItemInserted(position);
     }
 
-    public void removeData(int position){
+    public void removeData(int position) {
         mDatas.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view,int position);
+    }
+
+    public OnItemClickListener mOnItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+
     }
 }

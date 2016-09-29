@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Button;
 
@@ -42,11 +42,38 @@ public class RecycleViewActvity extends Activity {
     }
 
     private void initView() {
-        rvPractice.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.HORIZONTAL));
+        rvPractice.setLayoutManager(new LinearLayoutManager(this));
 //        rvPractice.addItemDecoration(new DividerGridItemDecoration(this));
         rvPractice.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new HomeAdapter(this, mDatas);
         rvPractice.setAdapter(mAdapter);
+
+        /**方法之二：通过adapter中自己提供回调*/
+       /* mAdapter.setOnItemClickListener(new HomeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(RecycleViewActvity.this, position + "  clicked", Toast.LENGTH_LONG).show();
+            }
+        });
+*/
+
+        /**方法之一：条目手势监听*/
+       /* rvPractice.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });*/
     }
 
     private void initData() {
